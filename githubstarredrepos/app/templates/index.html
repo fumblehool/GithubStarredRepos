@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        {% block title %}
+            Picsaver
+        {% endblock %}
+    </title>
+
+
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header" style="padding-bottom:15%;">
+            <nav>
+
+                <div style="float:left;">
+            <h3 class="text-muted"><a href="#")}}" style="text-decoration:none;">Picsaver</a></h3>
+            </div>
+
+                <div style="float:right;">
+                    {% block nav %}
+                <ul class="nav nav-pills pull-right">
+                     <li role="presentation" class="active"><a href="#")}}">Home</a></li>
+                    <li role="presentation"><a href="#")}}">Contact</a></li>
+                    {% if session['access_token']%}
+                    <li role="presentation"><a href="#")}}">Logout</a></li>
+                    {% else %}
+                    <li role="presentation"><a href="#")}}">Login</a></li>
+                    {% endif %}
+                </ul>
+                {% endblock %}
+                </div>
+
+            </nav>
+
+        </div>
+{% block content %}
+        <div class="jumbotron">
+            <h1>Picsaver App</h1>
+            <p class="lead"></p>
+            <p><a class="btn btn-lg btn-success" href="#" role="button">Get Started!</a>
+            </p>
+        </div>
+
+
+        <footer class="footer">
+            <p>&copy; Company 2016</p>
+        </footer>
+
+    </div>
+{% endblock %}
+</body>
+
+</html>

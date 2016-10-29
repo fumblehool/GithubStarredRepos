@@ -1,0 +1,54 @@
+
+footer{
+    margin:10px;
+}
+
+h1 {
+    text-align: center;
+    text-decoration: none;
+}
+
+a.user{
+    color:white;
+}
+
+div.img{
+    float:left;
+    display: inline-block;
+    margin:20px;
+}
+p.user_description{
+    text-align: justify;
+}
+
+span#actor_heading{
+    text-align: center;
+    font-size: 45px;
+    height: 100%;
+    text-decoration: underline;
+}
+h1.page_h{
+    text-decoration: none;
+}
+.img-responsive {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
+.image_test{
+    border-radius:50%;
+    margin:auto;
+}
+
+.contact  {
+    border-radius: 100px;
+}
+
+.c{
+    font-size: 24px;
+}
+
+.center{
+    margin:auto;
+}
