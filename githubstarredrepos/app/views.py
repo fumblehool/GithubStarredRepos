@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, session
+from flask.ext.github import Github
 from app import app
 
 
