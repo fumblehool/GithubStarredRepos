@@ -4,10 +4,10 @@
 <head>
     <title>
         {% block title %}
-            Picsaver
+            Github Starred Repos
         {% endblock %}
     </title>
-
+    
 
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -23,7 +23,7 @@
             <nav>
 
                 <div style="float:left;">
-            <h3 class="text-muted"><a href="#")}}" style="text-decoration:none;">Picsaver</a></h3>
+            <h3 class="text-muted"><a href="#")}}" style="text-decoration:none;">GithubStarredRepos</a></h3>
             </div>
 
                 <div style="float:right;">
@@ -46,8 +46,9 @@
 {% block content %}
         <div class="jumbotron">
             <h1>Picsaver App</h1>
+            {{token}}
             <p class="lead"></p>
-            <p><a class="btn btn-lg btn-success" href="#" role="button">Get Started!</a>
+            <p><a class="btn btn-lg btn-success" href="/login" role="button">Get Started!</a>
             </p>
         </div>
 
