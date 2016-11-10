@@ -7,5 +7,4 @@ def connection():
                            passwd="database password",
                            db="database_name")
     c = conn.cursor()
-
-return c, conn
+    return c, conn

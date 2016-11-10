@@ -1,23 +1,33 @@
 from flask import render_template, request, redirect, session, url_for, flash
 from flask.ext.github import GitHub
 from app import app
-from dbconnect import connection
+#from dbconnect import connection
+from config import secrets, secret_key
 
 
+app.config['GITHUB_CLIENT_ID'] = secrets['GITHUB_CLIENT_ID']
+app.config['GITHUB_CLIENT_SECRET'] = secrets['GITHUB_CLIENT_SECRET']
+app.secret_key = secret_key
 github = GitHub(app)
 
 
 @app.route("/")
 def main():
-    if "token" in session:
-        return "Congratulations"
+    if "access_token" in session:
+        return render_template("index.html")
     else:
-        return render_template("index.html", token = session['token'])
+        return render_template("index.html")
 
 
 @app.route('/login')
 def login():
     return github.authorize()
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
 
 
 @app.route('/github-callback')
@@ -29,7 +39,7 @@ def authorized(oauth_token):
         return redirect(url_for('main'))
 
     github_access_token = oauth_token
-    session['token'] = github_access_token
+    session['access_token'] = github_access_token
     return redirect(next_url)
 
 

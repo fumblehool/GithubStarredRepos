@@ -32,9 +32,9 @@
                      <li role="presentation" class="active"><a href="#")}}">Home</a></li>
                     <li role="presentation"><a href="#")}}">Contact</a></li>
                     {% if session['access_token']%}
-                    <li role="presentation"><a href="#")}}">Logout</a></li>
+                    <li role="presentation"><a href="/logout")}}">Logout</a></li>
                     {% else %}
-                    <li role="presentation"><a href="#")}}">Login</a></li>
+                    <li role="presentation"><a href="/login")}}">Login</a></li>
                     {% endif %}
                 </ul>
                 {% endblock %}
@@ -45,7 +45,7 @@
         </div>
 {% block content %}
         <div class="jumbotron">
-            <h1>Picsaver App</h1>
+            <h1>Github Starred Repos</h1>
             {{token}}
             <p class="lead"></p>
             <p><a class="btn btn-lg btn-success" href="/login" role="button">Get Started!</a>
