@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, session, url_for, flash
 from flask.ext.github import GitHub
 from app import app
-#from dbconnect import connection
+# from dbconnect import connection
 from config import secrets, secret_key
 
 
@@ -14,7 +14,7 @@ github = GitHub(app)
 @app.route("/")
 def main():
     if "access_token" in session:
-        return render_template("index.html")
+        return render_template("user.html", token=session['access_token'])
     else:
         return render_template("index.html")
 
