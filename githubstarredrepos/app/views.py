@@ -1,5 +1,8 @@
-from flask import render_template, request, redirect, session, url_for, flash
+from flask import render_template, request, redirect, session, url_for, flash, Response
 from flask.ext.github import GitHub
+import requests
+import json
+import os
 from app import app
 # from dbconnect import connection
 from config import secrets, secret_key
@@ -21,7 +24,7 @@ def main():
 
 @app.route('/login')
 def login():
-    return github.authorize()
+    return github.authorize(scope="user,repo")
 
 
 @app.route("/logout")
@@ -41,6 +44,25 @@ def authorized(oauth_token):
     github_access_token = oauth_token
     session['access_token'] = github_access_token
     return redirect(next_url)
+
+
+@app.route('/api/starred')
+def starred_repos_handler(c=None):
+    access_token = session['access_token']
+    url = "https://api.github.com/user/starred?access_token="
+    post_url = url + access_token
+
+    r = requests.get(post_url)
+    data = r.json()
+
+    return Response(
+        json.dumps(data),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
 
 
 @app.errorhandler(404)
