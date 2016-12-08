@@ -54,6 +54,46 @@ def starred_repos_handler(c=None):
 
     r = requests.get(post_url)
     data = r.json()
+    lock = False
+
+    with open('data.json', 'r') as f:
+        if f.read() == r.text:
+            lock = True
+
+    if lock:
+        return Response(
+        json.dumps([{
+    "id": 67319532,
+    "name": "algorithms",
+    "full_name": "domfarolino/algorithms",
+    "owner": {
+      "login": "domfarolino",
+      "id": 9669289,
+      "avatar_url": "https://avatars.githubusercontent.com/u/9669289?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/domfarolino",
+      "html_url": "https://github.com/domfarolino",
+      "followers_url": "https://api.github.com/users/domfarolino/followers",
+      "following_url": "https://api.github.com/users/domfarolino/following{/other_user}",
+      "gists_url": "https://api.github.com/users/domfarolino/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/domfarolino/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/domfarolino/subscriptions",
+      "organizations_url": "https://api.github.com/users/domfarolino/orgs",
+      "repos_url": "https://api.github.com/users/domfarolino/repos",
+      "events_url": "https://api.github.com/users/domfarolino/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/domfarolino/received_events",
+      "type": "User",
+      "site_admin": false
+    }}]),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
+
+    with open('data.json', 'w') as f:
+        json.dump(r.text, f)
 
     return Response(
         json.dumps(data),

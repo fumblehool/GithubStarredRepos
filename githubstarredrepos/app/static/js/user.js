@@ -23,26 +23,45 @@ var StarredRepoList = React.createClass({
     render: function(){
         return (
             <div className="commentBox">    
-                <h1>Repos</h1>
-                <List  data={this.state.data} />
+                <h1>Repositories</h1>
+                <RepoList  data={this.state.data} />
             </div>
         );
     }
 })
 
-var List = React.createClass({
+var RepoList = React.createClass({
     render: function(){
+        var RepoNodes = this.props.data.map(function(repo){
+            return(
+                <Repo key={repo.id} id={repo.id} data={repo}>
+                    {repo.name}
+                </Repo>
+                );
+        }.bind(this));
         return(
             <div className="commentlist">
-                {this.props.data.map(function(comment){
-                    return <h1> {comment.name} </h1>;
-                    }) }
+                {RepoNodes}
             </div>
         );
     }
 });
 
+
+var Repo = React.createClass({
+    render: function(){
+        return(
+            <div className="comment">
+                <h2 className="commentAuthor">
+                    {this.props.data.owner.login}
+                </h2>
+                <button>X</button>
+            </div>
+        )
+    }
+});
+
 ReactDOM.render(
-    < StarredRepoList url="/api/starred" pollInterval={2000} />,
+    < StarredRepoList url="/api/starred" pollInterval={4000} />,
     document.getElementById('App')
 );  
