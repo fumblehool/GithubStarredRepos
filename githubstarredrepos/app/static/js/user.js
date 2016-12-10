@@ -51,17 +51,33 @@ var RepoList = React.createClass({
 var Repo = React.createClass({
     render: function(){
         return(
-            <div className="comment">
-                <h2 className="commentAuthor">
-                    {this.props.data.owner.login}
-                </h2>
-                <button>X</button>
+            <div className="container first_link">
+                <div className="row">
+                    <div className="col-md-10">
+                    <a href="#">
+                        <h3>
+                        {this.props.data.owner.login} / {this.props.data.name}
+                        </h3>
+                    </a>
+                    </div>
+                    <div className="col-md-2">
+                        <button>X</button>
+                    </div>
+                </div>
+                <div class="py-1">
+                <p class="d-inline-block col-9 text-gray pr-4" itemprop="description">
+                    {this.props.data.description}
+                </p>
+  </div>
+                <hr/>
+                
+                
             </div>
         )
     }
 });
 
 ReactDOM.render(
-    < StarredRepoList url="/api/starred" pollInterval={4000} />,
+    < StarredRepoList url="/api/starred" pollInterval={8000} />,
     document.getElementById('App')
 );  
