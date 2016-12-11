@@ -23,7 +23,7 @@ var StarredRepoList = React.createClass({
     render: function(){
         return (
             <div className="commentBox">    
-                <h1>Repositories</h1>
+                <h1 className="Head">Repositories</h1>
                 <RepoList  data={this.state.data} />
             </div>
         );
@@ -55,7 +55,7 @@ var Repo = React.createClass({
                 <div className="row">
                     <div className="col-md-10">
                     <a href="#">
-                        <h3>
+                        <h3 className="reponame">
                         {this.props.data.owner.login} / {this.props.data.name}
                         </h3>
                     </a>
