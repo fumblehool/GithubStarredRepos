@@ -2,7 +2,7 @@ var StarredRepoList = React.createClass({
     getInitialState: function(){
         return { data: []};
     },
-    loadCommentsFromServer: function(){
+    loadReposFromServer: function(){
         $.ajax({
             url: this.props.url,
             dataType: 'json',
@@ -17,14 +17,29 @@ var StarredRepoList = React.createClass({
         });
     },
     componentDidMount: function(){
-        this.loadCommentsFromServer();
+        this.loadReposFromServer();
         setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+    },
+    handleUnstarRequest: function(repoID){
+        var data = this.state.data;
+        $.ajax({
+            url: this.props.url + "/" + repoID,
+            dataType: 'json',
+            type: 'DELETE',
+            success: function(data){
+                console.log(repoID + "unstarred!");
+                this.setState({data: data});
+            }.bind(this),
+            error: function(xhr, status, err){
+                console.error(this.props.url + "/" + repoID, status, err.toString());
+            }.bind(this)
+        });
     },
     render: function(){
         return (
             <div className="commentBox">    
                 <h1 className="Head">Repositories</h1>
-                <RepoList  data={this.state.data} />
+                <RepoList  onUnstarRequest={this.handleUnstarRequest }data={this.state.data} />
             </div>
         );
     }
@@ -34,7 +49,7 @@ var RepoList = React.createClass({
     render: function(){
         var RepoNodes = this.props.data.map(function(repo){
             return(
-                <Repo key={repo.id} id={repo.id} data={repo}>
+                <Repo key={repo.id} id={repo.id} data={repo} onUnstarRepo={this.props.onUnstarRequest}>
                     {repo.name}
                 </Repo>
                 );
@@ -49,6 +64,9 @@ var RepoList = React.createClass({
 
 
 var Repo = React.createClass({
+    UnstarRepo: function(){
+        this.props.onUnstarRepo(this.props.id);
+    },
     render: function(){
         return(
             <div className="container first_link">
@@ -61,7 +79,7 @@ var Repo = React.createClass({
                     </a>
                     </div>
                     <div className="col-md-2">
-                        <button>X</button>
+                        <button onClick={this.UnstarRepo}>X</button>
                     </div>
                 </div>
                 <div class="py-1">

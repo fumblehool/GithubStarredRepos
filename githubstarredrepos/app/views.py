@@ -46,27 +46,56 @@ def authorized(oauth_token):
     return redirect(next_url)
 
 
-@app.route('/api/starred')
+@app.route('/api/starred', methods=['GET', 'POST'])
+@app.route('/api/starred/<c>', methods=['DELETE'])
 def starred_repos_handler(c=None):
-    access_token = session['access_token']
-    url = "https://api.github.com/user/starred?access_token="
-    post_url = url + access_token
 
-    r = requests.get(post_url)
-    data = r.json()
+    if request.method == 'GET':
+        access_token = session['access_token']
+        url = "https://api.github.com/user/starred?access_token="
+        post_url = url + access_token
 
+        r = requests.get(post_url)
+        data = r.json()
 
-    with open('data.json', 'w') as f:
-        f.write(json.dumps(data, indent=4))
+        with open('data.json', 'w') as f:
+            f.write(json.dumps(data, indent=4))
 
-    return Response(
-        json.dumps(data),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
-    )
+        return Response(
+            json.dumps(data),
+            mimetype='application/json',
+            headers={
+                'Cache-Control': 'no-cache',
+                'Access-Control-Allow-Origin': '*'
+            }
+        )
+
+    if request.method == 'DELETE':
+        d = [{
+        "name": "First sample name",
+        "id": 1473150610310,
+        "author": "daman",
+        "owner":{ "login": "first_owner"}
+
+        },{
+        "id": 1473238462599,
+        "name": "Second sample name",
+        "owner":{ "login": "second_owner"}
+        },{
+        "text": "sf",
+        "id": 1479906751434,
+        "name": "Third sample name",
+        "owner":{ "login": "third_owner"}
+        }]
+
+        return Response(
+            json.dumps(d),
+            mimetype='application/json',
+            headers={
+                'Cache-Control': 'no-cache',
+                'Access-Control-Allow-Origin': '*'
+            }
+        )
 
 
 @app.errorhandler(404)
