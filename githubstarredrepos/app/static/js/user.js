@@ -20,18 +20,18 @@ var StarredRepoList = React.createClass({
         this.loadReposFromServer();
         setInterval(this.loadCommentsFromServer, this.props.pollInterval);
     },
-    handleUnstarRequest: function(repoID){
+    handleUnstarRequest: function(repoOwner, repoName){
         var data = this.state.data;
         $.ajax({
-            url: this.props.url + "/" + repoID,
+            url: this.props.url + "/" + repoOwner + "/" + repoName,
             dataType: 'json',
             type: 'DELETE',
             success: function(data){
-                console.log(repoID + "unstarred!");
+                console.log(repoOwner + "/" + repoName + " unstarred!");
                 this.setState({data: data});
             }.bind(this),
             error: function(xhr, status, err){
-                console.error(this.props.url + "/" + repoID, status, err.toString());
+                console.error(this.props.url, status, err.toString());
             }.bind(this)
         });
     },
@@ -49,7 +49,10 @@ var RepoList = React.createClass({
     render: function(){
         var RepoNodes = this.props.data.map(function(repo){
             return(
-                <Repo key={repo.id} id={repo.id} data={repo} onUnstarRepo={this.props.onUnstarRequest}>
+                <Repo key={repo.id} id={repo.id} data={repo}
+                onUnstarRepo={this.props.onUnstarRequest}
+                owner={repo.owner.login}
+                name={repo.name} >
                     {repo.name}
                 </Repo>
                 );
@@ -65,7 +68,7 @@ var RepoList = React.createClass({
 
 var Repo = React.createClass({
     UnstarRepo: function(){
-        this.props.onUnstarRepo(this.props.id);
+        this.props.onUnstarRepo(this.props.owner, this.props.name);
     },
     render: function(){
         return(

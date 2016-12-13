@@ -47,55 +47,33 @@ def authorized(oauth_token):
 
 
 @app.route('/api/starred', methods=['GET', 'POST'])
-@app.route('/api/starred/<c>', methods=['DELETE'])
-def starred_repos_handler(c=None):
-
-    if request.method == 'GET':
-        access_token = session['access_token']
-        url = "https://api.github.com/user/starred?access_token="
-        post_url = url + access_token
-
-        r = requests.get(post_url)
-        data = r.json()
-
-        with open('data.json', 'w') as f:
-            f.write(json.dumps(data, indent=4))
-
-        return Response(
-            json.dumps(data),
-            mimetype='application/json',
-            headers={
-                'Cache-Control': 'no-cache',
-                'Access-Control-Allow-Origin': '*'
-            }
-        )
+@app.route('/api/starred/<owner>/<name>', methods=['DELETE'])
+def starred_repos_handler(owner=None, name=None):
 
     if request.method == 'DELETE':
-        d = [{
-        "name": "First sample name",
-        "id": 1473150610310,
-        "author": "daman",
-        "owner":{ "login": "first_owner"}
+        url = "https://api.github.com/user/starred/" + owner + "/" + name
+        unstar_repo_url = url + "?access_token=" + session['access_token']
 
-        },{
-        "id": 1473238462599,
-        "name": "Second sample name",
-        "owner":{ "login": "second_owner"}
-        },{
-        "text": "sf",
-        "id": 1479906751434,
-        "name": "Third sample name",
-        "owner":{ "login": "third_owner"}
-        }]
+        r = requests.delete(unstar_repo_url)
 
-        return Response(
-            json.dumps(d),
-            mimetype='application/json',
-            headers={
-                'Cache-Control': 'no-cache',
-                'Access-Control-Allow-Origin': '*'
-            }
-        )
+    access_token = session['access_token']
+    url = "https://api.github.com/user/starred?access_token="
+    post_url = url + access_token
+
+    r = requests.get(post_url)
+    data = r.json()
+
+    with open('data.json', 'w') as f:
+        f.write(json.dumps(data, indent=4))
+
+    return Response(
+        json.dumps(data),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
 
 
 @app.errorhandler(404)
