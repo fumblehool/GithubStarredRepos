@@ -43,6 +43,7 @@ def authorized(oauth_token):
 
     github_access_token = oauth_token
     session['access_token'] = github_access_token
+    session['load_data'] = False
     return redirect(next_url)
 
 
@@ -55,6 +56,7 @@ def starred_repos_handler(owner=None, name=None):
         unstar_repo_url = url + "?access_token=" + session['access_token']
 
         r = requests.delete(unstar_repo_url)
+        session['load_data'] = False
 
     access_token = session['access_token']
     url = "https://api.github.com/user/starred?access_token="
@@ -63,8 +65,10 @@ def starred_repos_handler(owner=None, name=None):
     r = requests.get(post_url)
     data = r.json()
 
-    with open('data.json', 'w') as f:
-        f.write(json.dumps(data, indent=4))
+    if session['load_data'] is False:
+        with open('data.json', 'w') as f:
+            f.write(json.dumps(data, indent=4))
+            session['load_data'] = True
 
     return Response(
         json.dumps(data),
