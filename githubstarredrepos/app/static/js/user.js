@@ -71,11 +71,14 @@ var Repo = React.createClass({
         this.props.onUnstarRepo(this.props.owner, this.props.name);
     },
     render: function(){
+        var owner = this.props.data.owner.login;
+        var name = this.props.data.name;
+        var address = "http://github.com/" + owner + "/" + name;
         return(
             <div className="container first_link">
                 <div className="row">
                     <div className="col-md-10">
-                    <a href="#">
+                    <a href= {address}>
                         <h3 className="reponame">
                         {this.props.data.owner.login} / {this.props.data.name}
                         </h3>
