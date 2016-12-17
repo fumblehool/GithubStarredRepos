@@ -1,10 +1,36 @@
+var { Router,
+      Route,
+      IndexRoute,
+      IndexLink,
+      Link,
+      hashHistory } = ReactRouter;
+
+var NavigationBar = React.createClass({
+    render: function(){
+        
+        return (
+            <div className="container">
+            <h1>Github Starred Repos</h1>
+            <ul className="nav nav-tabs nav-justified">
+                <li><Link to="/">User</Link></li>
+                <li><Link to="/list">Repo List</Link></li>
+                <li><Link to="/contact">Contact</Link></li>
+            </ul>
+                <div className="content">
+                    {this.props.children}
+                </div>
+            </div>
+        )
+    }
+});
+
 var StarredRepoList = React.createClass({
     getInitialState: function(){
         return { data: []};
     },
     loadReposFromServer: function(){
         $.ajax({
-            url: this.props.url,
+            url: "/api/starred" ,
             dataType: 'json',
             cache: false,
             success: function(data){
@@ -18,12 +44,12 @@ var StarredRepoList = React.createClass({
     },
     componentDidMount: function(){
         this.loadReposFromServer();
-        setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+        setInterval(this.loadCommentsFromServer, 8000);
     },
     handleUnstarRequest: function(repoOwner, repoName){
         var data = this.state.data;
         $.ajax({
-            url: this.props.url + "/" + repoOwner + "/" + repoName,
+            url: "/api/starred" + "/" + repoOwner + "/" + repoName,
             dataType: 'json',
             type: 'DELETE',
             success: function(data){
@@ -31,14 +57,14 @@ var StarredRepoList = React.createClass({
                 this.setState({data: data});
             }.bind(this),
             error: function(xhr, status, err){
-                console.error(this.props.url, status, err.toString());
+                console.error("/api/starred", status, err.toString());
             }.bind(this)
         });
     },
     render: function(){
         return (
-            <div className="commentBox">    
-                <h1 className="Head">Repositories</h1>
+            <div className="">    
+                <h1 className="Head"></h1>
                 <RepoList  onUnstarRequest={this.handleUnstarRequest }data={this.state.data} />
             </div>
         );
@@ -101,7 +127,26 @@ var Repo = React.createClass({
     }
 });
 
+
+var contact = React.createClass({
+    render: function(){
+        return( <h1> Contact Information goes here!</h1>);
+    }
+});
+
+var User = React.createClass({
+    render: function(){
+        return ( <h1>The user info goes here. </h1>);
+    }
+});
+
 ReactDOM.render(
-    < StarredRepoList url="/api/starred" pollInterval={8000} />,
+    <Router history={hashHistory}>
+        <Route path="/" component={NavigationBar}>
+            <IndexRoute component={User}/>
+            <Route path="/list" component={StarredRepoList}/>
+            <Route path="/contact" component={contact}/>
+        </Route>
+    </Router>,
     document.getElementById('App')
 );  
