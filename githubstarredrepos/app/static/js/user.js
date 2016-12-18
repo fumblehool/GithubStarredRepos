@@ -103,15 +103,15 @@ var Repo = React.createClass({
         return(
             <div className="container first_link">
                 <div className="row">
-                    <div className="col-md-8">
+                    <div className="col-md-8 col-xs-8 col-sm-8">
                     <a href= {address}>
                         <h3 className="reponame">
                         {this.props.data.owner.login} / {this.props.data.name}
                         </h3>
                     </a>
                     </div>
-                    <div className="col-md-4 col-xs-4 ">
-                        <div className="float-right">
+                    <div className="col-md-4 col-xs-4 col-sm-4 ">
+                        <div className="unstar">
                             <button onClick={this.UnstarRepo}>X</button>
                         </div>
                     </div>
