@@ -80,6 +80,25 @@ def starred_repos_handler(owner=None, name=None):
     )
 
 
+@app.route('/api/user', methods=['GET', 'POST'])
+def get_user_info():
+    access_token = session['access_token']
+    url = "https://api.github.com/user?access_token="
+    post_url = url + access_token
+
+    r = requests.get(post_url)
+    data = r.json()
+
+    return Response(
+        json.dumps(data),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
