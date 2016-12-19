@@ -3,63 +3,29 @@
 
 <head>
     <title>
-        {% block title %}
-            Github Starred Repos
-        {% endblock %}
+        Github Starred Repos
     </title>
     
 
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+    <script src="{{url_for('static', filename='js/react.js')}}"></script>
+    <script src="{{url_for('static', filename='js/react-dom.js')}}"></script>
+    <script type="text/babel" src="{{url_for('static', filename='js/index.js')}}"></script>
+    <script
+              src="https://code.jquery.com/jquery-3.1.1.min.js"
+              integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+              crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.js"></script>
+    <script src="https://npmcdn.com/react-router@2.4.0/umd/ReactRouter.min.js"></script>
 
 </head>
 
 <body>
-
-    <div class="container">
-        <div class="header" style="padding-bottom:15%;">
-            <nav>
-
-                <div style="float:left;">
-            <h3 class="text-muted"><a href="#")}}" style="text-decoration:none;">GithubStarredRepos</a></h3>
-            {{token}}
-            </div>
-
-                <div style="float:right;">
-                    {% block nav %}
-                <ul class="nav nav-pills pull-right">
-                     <li role="presentation" class="active"><a href="#")}}">Home</a></li>
-                    <li role="presentation"><a href="#")}}">Contact</a></li>
-                    {% if session['access_token']%}
-                    <li role="presentation"><a href="/logout")}}">Logout</a></li>
-                    {% else %}
-                    <li role="presentation"><a href="/login")}}">Login</a></li>
-                    {% endif %}
-                </ul>
-                {% endblock %}
-                </div>
-
-            </nav>
-
-        </div>
-{% block content %}
-        <div class="jumbotron">
-            <h1>Github Starred Repos</h1>
-            {{token}}
-            <p class="lead"></p>
-            <p><a class="btn btn-lg btn-success" href="/login" role="button">Get Started!</a>
-            </p>
-        </div>
-
-
-        <footer class="footer">
-            <p>&copy; Company 2016</p>
-        </footer>
-
+    <div id="App">
     </div>
-{% endblock %}
 </body>
 
 </html>

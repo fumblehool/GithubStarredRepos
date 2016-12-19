@@ -1,8 +1,8 @@
-from flask import render_template, request, redirect, session, url_for, flash, Response
+from flask import render_template, request, redirect, session,\
+    url_for, flash, Response
 from flask.ext.github import GitHub
 import requests
 import json
-import os
 from app import app
 # from dbconnect import connection
 from config import secrets, secret_key
@@ -88,7 +88,7 @@ def get_user_info():
 
     r = requests.get(post_url)
     data = r.json()
-
+    session['username'] = data['login']
     return Response(
         json.dumps(data),
         mimetype='application/json',
