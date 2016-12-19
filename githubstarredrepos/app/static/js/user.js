@@ -12,9 +12,9 @@ var NavigationBar = React.createClass({
             <div className="container">
             <h1>Github Starred Repos</h1>
             <ul className="nav nav-tabs nav-justified">
-                <li><IndexLink to="/" activeClassName="active">User</IndexLink></li>
-                <li><Link to="/list" activeClassName="active">Repo List</Link></li>
-                <li><Link to="/contact" activeClassName="active">Contact</Link></li>
+                <li><IndexLink to="/">User</IndexLink></li>
+                <li><Link to="/list">Repo List</Link></li>
+                <li><Link to="/contact">Contact</Link></li>
             </ul>
                 <div className="content">
                     {this.props.children}
@@ -117,18 +117,14 @@ var Repo = React.createClass({
                     </div>
                 </div>
                 <div class="py-1">
-                <p class="d-inline-block col-md-9  text-gray pr-4" itemprop="description">
-                    {this.props.data.description}
-                </p>
-  </div>
+                    <p class="d-inline-block col-md-9  text-gray pr-4">
+                        {this.props.data.description}
+                    </p>
+                </div>
                 <hr/>
-                
-                
-            </div>
-        )
+            </div>)
     }
 });
-
 
 
 var User = React.createClass({
@@ -214,19 +210,18 @@ var contact = React.createClass({
             cols: 10
         }
         return( 
-                <div className="center container">
+            <div className="center container">
                 <h1></h1>
                 <form method=''>
-                <div className="center Head">
-                    <input type="text" name="name" placeholder="Name"/>
-                </div>
-                <div className="center Head">
-                    <textarea type="textbox"style={commentStyle}name="comment" placeholder="Enter your comments!"/>
-                </div>
-                <button className="btn btn-lg btn-success" value="submit">Comment!</button>
+                    <div className="center Head">
+                        <input type="text" name="name" placeholder="Name"/>
+                    </div>
+                    <div className="center Head">
+                        <textarea type="textbox"style={commentStyle} placeholder="Enter your comments!"/>
+                    </div>
+                    <button className="btn btn-lg btn-success" value="submit">Comment!</button>
                 </form>
-                </div>
-        );
+            </div>);
     }
 });
 
