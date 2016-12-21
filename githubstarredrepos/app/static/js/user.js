@@ -24,9 +24,25 @@ var NavigationBar = React.createClass({
     }
 });
 
+var SearchBar = React.createClass({
+    doSearch:function(){
+        var query=this.refs.searchInput.value; // this is the search text
+        this.props.doSearch(query);
+    },
+    render: function(){
+        return(
+            <div className="center container"> 
+            <input type="text" ref="searchInput" placeholder="Search Name" value={this.props.query} onChange={this.doSearch}/>
+            </div>
+        )
+    }
+});
+
 var StarredRepoList = React.createClass({
     getInitialState: function(){
-        return { data: []};
+        return { data: [],
+                 searchQuery: []
+                };
     },
     loadReposFromServer: function(){
         $.ajax({
@@ -55,17 +71,27 @@ var StarredRepoList = React.createClass({
             success: function(data){
                 console.log(repoOwner + "/" + repoName + " unstarred!");
                 this.setState({data: data});
+                this.setState({dataTemp: data});
             }.bind(this),
             error: function(xhr, status, err){
                 console.error("/api/starred", status, err.toString());
             }.bind(this)
         });
     },
+    doSearch: function(query){
+        var filter = query.toLowerCase();
+        this.setState({searchQuery: filter});
+            
+    },
     render: function(){
         return (
             <div className="">    
                 <h1 className="Head"></h1>
-                <RepoList  onUnstarRequest={this.handleUnstarRequest }data={this.state.data} />
+                <SearchBar searchQuery={this.state.searchQuery} doSearch={this.doSearch}/>
+                <RepoList  
+                onUnstarRequest={this.handleUnstarRequest } 
+                data={this.state.data} 
+                searchQuery={this.state.searchQuery}/>
             </div>
         );
     }
@@ -73,7 +99,11 @@ var StarredRepoList = React.createClass({
 
 var RepoList = React.createClass({
     render: function(){
+        var filter = this.props.searchQuery;
         var RepoNodes = this.props.data.map(function(repo){
+            if(repo.name.toLowerCase().indexOf(filter) < 0){
+                return;
+            }
             return(
                 <Repo key={repo.id} id={repo.id} data={repo}
                 onUnstarRepo={this.props.onUnstarRequest}
@@ -100,6 +130,7 @@ var Repo = React.createClass({
         var owner = this.props.data.owner.login;
         var name = this.props.data.name;
         var address = "http://github.com/" + owner + "/" + name;
+        var downloadAddress="https://github.com/" + owner + "/" + name + "/archive/master.zip";
         return(
             <div className="container first_link">
                 <div className="row">
@@ -112,7 +143,18 @@ var Repo = React.createClass({
                     </div>
                     <div className="col-md-4 col-xs-4 col-sm-4 ">
                         <div className="unstar">
+                            <div className="row">
                             <button onClick={this.UnstarRepo}>X</button>
+                            <br/>
+                            <br/>
+                            </div>
+                            <div className="row">
+                            <div className="center">
+                            <a className="btn btn-success" href={downloadAddress} role="button">
+                                <span className="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                            </a>
+                            </div>
+                            </div>
                         </div>
                     </div>
                 </div>
