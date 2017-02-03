@@ -4,7 +4,7 @@ import requests
 import json
 import os
 from app import app
-# from dbconnect import connection
+from dbconnect import connection
 from config import secrets, secret_key
 
 
@@ -24,7 +24,7 @@ def main():
 
 @app.route('/login')
 def login():
-    return github.authorize(scope="user,repo")
+    return github.authorize(scope="user")
 
 
 @app.route("/logout")
