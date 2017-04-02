@@ -106,7 +106,6 @@ var RepoList = React.createClass({
             }
             return(
                 <Repo key={repo.id} id={repo.id} data={repo}
-                onUnstarRepo={this.props.onUnstarRequest}
                 owner={repo.owner.login}
                 name={repo.name} >
                     {repo.name}
@@ -144,7 +143,6 @@ var Repo = React.createClass({
                     <div className="col-md-4 col-xs-4 col-sm-4 ">
                         <div className="unstar">
                             <div className="row">
-                            <button onClick={this.UnstarRepo}>X</button>
                             <br/>
                             <br/>
                             </div>

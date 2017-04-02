@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-from flask import render_template, request, redirect, session,\
-    url_for, flash, Response
-from flask.ext.github import GitHub
-import requests
-import json
-=======
 from flask import render_template, request, redirect, session, url_for,\
     flash, Response
 from flask.ext.github import GitHub
 import requests
 import json
 # import os
->>>>>>> v2-tags-functionality
 from app import app
 from dbconnect import connection
 from config import secrets, secret_key
@@ -39,8 +31,6 @@ def login():
 @app.route("/logout")
 def logout():
     session.clear()
-    from IPython import embed
-    embed()
     return redirect("/")
 
 
@@ -72,15 +62,8 @@ def starred_repos_handler(owner=None, name=None):
     access_token = session['access_token']
     url = "https://api.github.com/user/starred?access_token="
     post_url = url + access_token
-
     r = requests.get(post_url)
     data = r.json()
-
-<<<<<<< HEAD
-    if session['load_data'] is False:
-        with open('data.json', 'w') as f:
-            f.write(json.dumps(data, indent=4))
-            session['load_data'] = True
 
     return Response(
         json.dumps(data),
@@ -97,11 +80,6 @@ def get_user_info():
     access_token = session['access_token']
     url = "https://api.github.com/user?access_token="
     post_url = url + access_token
-=======
-    with open('data.json', 'w') as f:
-        f.write(json.dumps(data, indent=4))
->>>>>>> v2-tags-functionality
-
     r = requests.get(post_url)
     data = r.json()
     session['username'] = data['login']
