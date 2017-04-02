@@ -1,8 +1,9 @@
-from flask import render_template, request, redirect, session, url_for, flash, Response
+from flask import render_template, request, redirect, session, url_for,\
+    flash, Response
 from flask.ext.github import GitHub
 import requests
 import json
-import os
+# import os
 from app import app
 from dbconnect import connection
 from config import secrets, secret_key
@@ -30,6 +31,8 @@ def login():
 @app.route("/logout")
 def logout():
     session.clear()
+    from IPython import embed
+    embed()
     return redirect("/")
 
 
@@ -54,7 +57,6 @@ def starred_repos_handler(c=None):
 
     r = requests.get(post_url)
     data = r.json()
-
 
     with open('data.json', 'w') as f:
         f.write(json.dumps(data, indent=4))
