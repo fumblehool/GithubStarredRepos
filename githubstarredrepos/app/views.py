@@ -93,6 +93,20 @@ def get_user_info():
     )
 
 
+@app.route('/api/<repoid>/comment/', methods=['GET', 'POST'])
+def post_repo_comment(repoid):
+    if request.method == "POST":
+        comment = "'Some comment'"
+        c, conn = connection()
+        query = "UPDATE data SET comment ="\
+                + comment + " WHERE repoId=" + repoid
+        c.execute(query)
+        conn.commit()
+        c.close()
+        conn.close()
+    return "Done", 200
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
