@@ -58,6 +58,26 @@ var StarredRepoList = React.createClass({
 
         });
     },
+    sendCommentToServer: function(repoId, comment){
+        var url = "/api/" + repoId + "/comment/";
+        var postData = JSON.stringify({comment: comment});
+        console.log(postData);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: postData,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function(postData){
+                console.log("success!!!");
+                alert(postData);
+
+            }.bind(this),
+            error: function(xhr, status, err){
+                console.error("POST REQUEST ERROR>");
+            }.bind(this)
+        });
+    },
     componentDidMount: function(){
         this.loadReposFromServer();
         setInterval(this.loadCommentsFromServer, 8000);
@@ -89,7 +109,7 @@ var StarredRepoList = React.createClass({
                 <h1 className="Head"></h1>
                 <SearchBar searchQuery={this.state.searchQuery} doSearch={this.doSearch}/>
                 <RepoList  
-                onUnstarRequest={this.handleUnstarRequest } 
+                onPostCommentRequest={this.sendCommentToServer} 
                 data={this.state.data} 
                 searchQuery={this.state.searchQuery}/>
             </div>
@@ -107,7 +127,8 @@ var RepoList = React.createClass({
             return(
                 <Repo key={repo.id} id={repo.id} data={repo}
                 owner={repo.owner.login}
-                name={repo.name} >
+                name={repo.name} 
+                onPostComment={this.props.onPostCommentRequest}>
                     {repo.name}
                 </Repo>
                 );
@@ -122,14 +143,17 @@ var RepoList = React.createClass({
 
 
 var Repo = React.createClass({
-    UnstarRepo: function(){
-        this.props.onUnstarRepo(this.props.owner, this.props.name);
+    CommentBox: function(){
+        var comment = prompt("hello how are you?");
+        this.props.onPostComment(this.props.data.id, comment);
+        // alert("comment is" + comment);
     },
     render: function(){
         var owner = this.props.data.owner.login;
         var name = this.props.data.name;
         var address = "http://github.com/" + owner + "/" + name;
         var downloadAddress="https://github.com/" + owner + "/" + name + "/archive/master.zip";
+        
         return(
             <div className="container first_link">
                 <div className="row">
@@ -148,6 +172,9 @@ var Repo = React.createClass({
                             </div>
                             <div className="row">
                             <div className="center">
+                            <a className="btn btn-success"  role="button">
+                                <span className="" onClick={this.CommentBox} aria-hidden="true">Comment </span>
+                            </a>
                             <a className="btn btn-success" href={downloadAddress} role="button">
                                 <span className="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                             </a>

@@ -75,7 +75,7 @@ def starred_repos_handler(owner=None, name=None):
     )
 
 
-@app.route('/api/user', methods=['GET', 'POST'])
+@app.route('/api/user')
 def get_user_info():
     access_token = session['access_token']
     url = "https://api.github.com/user?access_token="
@@ -83,6 +83,7 @@ def get_user_info():
     r = requests.get(post_url)
     data = r.json()
     session['username'] = data['login']
+    session['userid'] = data['id']
     return Response(
         json.dumps(data),
         mimetype='application/json',
@@ -96,15 +97,16 @@ def get_user_info():
 @app.route('/api/<repoid>/comment/', methods=['GET', 'POST'])
 def post_repo_comment(repoid):
     if request.method == "POST":
-        comment = "'Some comment'"
+        comment = request.json['comment']
         c, conn = connection()
-        query = "UPDATE data SET comment ="\
-                + comment + " WHERE repoId=" + repoid
+        query = "UPDATE data SET comment ='"\
+                + comment + "' WHERE repoid=" + repoid + " AND userid="\
+                + str(session['userid'])
         c.execute(query)
         conn.commit()
         c.close()
         conn.close()
-    return "Done", 200
+    return "done", 200
 
 
 @app.errorhandler(404)
