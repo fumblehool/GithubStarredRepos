@@ -64,7 +64,19 @@ def starred_repos_handler(owner=None, name=None):
     post_url = url + access_token
     r = requests.get(post_url)
     data = r.json()
-
+    c, conn = connection()
+    count = 0
+    for i in data:
+        query = "SELECT comment from data WHERE repoid='" + \
+                str(data[count]['id']) + "'"
+        c.execute(query)
+        rv = c.fetchone()
+        # from IPython import embed;embed()
+        data[count]['comment'] = str(rv)[2:-3]
+        count = count + 1
+        conn.commit()
+    c.close()
+    conn.close()
     return Response(
         json.dumps(data),
         mimetype='application/json',

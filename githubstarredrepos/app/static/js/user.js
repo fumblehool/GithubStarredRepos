@@ -4,6 +4,8 @@ var { Router,
       IndexLink,
       Link,
       hashHistory } = ReactRouter;
+var Select = 'react-select';
+var Creatable = 'react-select';
 
 var NavigationBar = React.createClass({
     render: function(){
@@ -41,7 +43,8 @@ var SearchBar = React.createClass({
 var StarredRepoList = React.createClass({
     getInitialState: function(){
         return { data: [],
-                 searchQuery: []
+                 searchQuery: [],
+                 tagData: []
                 };
     },
     loadReposFromServer: function(){
@@ -58,10 +61,14 @@ var StarredRepoList = React.createClass({
 
         });
     },
-    sendCommentToServer: function(repoId, comment){
+    sendCommentToServer: function(index, repoId, comment){
         var url = "/api/" + repoId + "/comment/";
         var postData = JSON.stringify({comment: comment});
+        var data = this.state.data;
         console.log(postData);
+        var items = this.state.data;
+        items[index].comment = comment;
+        this.setState({data: items});
         $.ajax({
             type: "POST",
             url: url,
@@ -70,8 +77,6 @@ var StarredRepoList = React.createClass({
             contentType: 'application/json',
             success: function(postData){
                 console.log("success!!!");
-                alert(postData);
-
             }.bind(this),
             error: function(xhr, status, err){
                 console.error("POST REQUEST ERROR>");
@@ -82,21 +87,21 @@ var StarredRepoList = React.createClass({
         this.loadReposFromServer();
         setInterval(this.loadCommentsFromServer, 8000);
     },
-    handleUnstarRequest: function(repoOwner, repoName){
-        var data = this.state.data;
-        $.ajax({
-            url: "/api/starred" + "/" + repoOwner + "/" + repoName,
-            dataType: 'json',
-            type: 'DELETE',
-            success: function(data){
-                console.log(repoOwner + "/" + repoName + " unstarred!");
-                this.setState({data: data});
-                this.setState({dataTemp: data});
-            }.bind(this),
-            error: function(xhr, status, err){
-                console.error("/api/starred", status, err.toString());
-            }.bind(this)
-        });
+    handleTagInput: function(repoId){
+        // var data = this.state.data;
+        // $.ajax({
+        //     url: "/api/starred" + "/" + repoOwner + "/" + repoName,
+        //     dataType: 'json',
+        //     type: 'DELETE',
+        //     success: function(data){
+        //         console.log(repoOwner + "/" + repoName + " unstarred!");
+        //         this.setState({data: data});
+        //         this.setState({dataTemp: data});
+        //     }.bind(this),
+        //     error: function(xhr, status, err){
+        //         console.error("/api/starred", status, err.toString());
+        //     }.bind(this)
+        // });
     },
     doSearch: function(query){
         var filter = query.toLowerCase();
@@ -111,7 +116,9 @@ var StarredRepoList = React.createClass({
                 <RepoList  
                 onPostCommentRequest={this.sendCommentToServer} 
                 data={this.state.data} 
-                searchQuery={this.state.searchQuery}/>
+                searchQuery={this.state.searchQuery}
+                onTagInput={this.handleTagInput}
+                tagData={this.state.tagData}/>
             </div>
         );
     }
@@ -120,7 +127,7 @@ var StarredRepoList = React.createClass({
 var RepoList = React.createClass({
     render: function(){
         var filter = this.props.searchQuery;
-        var RepoNodes = this.props.data.map(function(repo){
+        var RepoNodes = this.props.data.map(function(repo, index){
             if(repo.name.toLowerCase().indexOf(filter) < 0){
                 return;
             }
@@ -128,7 +135,10 @@ var RepoList = React.createClass({
                 <Repo key={repo.id} id={repo.id} data={repo}
                 owner={repo.owner.login}
                 name={repo.name} 
-                onPostComment={this.props.onPostCommentRequest}>
+                onPostComment={this.props.onPostCommentRequest}
+                onPostTags={this.props.onTagInput}
+                tagData={this.props.tagData}
+                index={index}>
                     {repo.name}
                 </Repo>
                 );
@@ -144,9 +154,10 @@ var RepoList = React.createClass({
 
 var Repo = React.createClass({
     CommentBox: function(){
-        var comment = prompt("hello how are you?");
-        this.props.onPostComment(this.props.data.id, comment);
-        // alert("comment is" + comment);
+        var comment = prompt("Please Enter the Comment:");
+        if(comment != null){
+            this.props.onPostComment(this.props.index, this.props.data.id, comment);
+        }   
     },
     render: function(){
         var owner = this.props.data.owner.login;
@@ -173,7 +184,7 @@ var Repo = React.createClass({
                             <div className="row">
                             <div className="center">
                             <a className="btn btn-success"  role="button">
-                                <span className="" onClick={this.CommentBox} aria-hidden="true">Comment </span>
+                                <span className="" onClick={this.CommentBox} aria-hidden="true">Comment</span>
                             </a>
                             <a className="btn btn-success" href={downloadAddress} role="button">
                                 <span className="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
@@ -186,13 +197,53 @@ var Repo = React.createClass({
                 <div class="py-1">
                     <p class="d-inline-block col-md-9  text-gray pr-4">
                         {this.props.data.description}
+                        <hr/>
+                        {this.props.data.comment}
+
+
                     </p>
+                </div>
+                <div className="py-1">
+                    <TokenField tagData={this.props.tagData} onTagSubmit={this.props.onPostTags}/>
                 </div>
                 <hr/>
             </div>)
     }
 });
 
+
+var TokenField = React.createClass({
+    getInitialState: function(){
+        return {
+            tagData: []
+        };
+    },
+    componentDidMount: function(){
+        $('#tokenfield').tokenfield({});
+    },
+    handleKeyPress: function(e){
+        if(e.key === 'Enter'){
+            var tag= tag + this.refs.tagInput.value; // this is the search text
+            this.props.tagData 
+            // this.setState({tagData: tagData + tag}).bind(this);
+            // this.props.tagData = this.props.tagData + tag;
+            alert(" Tags are:" + tag);
+            $('#tokenfield').tokenfield({});
+            
+        }
+    },
+    render: function(){
+        // $('#tokenfield').tokenfield({};)
+        return(
+            <div id="token">
+                <p>{this.props.tagData}</p>
+                <input type="text" id="tokenfield" ref="tagInput"/>
+                <Creatable/>
+                <Select/>
+            </div>
+        )
+    }
+})
 
 var User = React.createClass({
     getInitialState : function(){
