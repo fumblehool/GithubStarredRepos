@@ -54,6 +54,7 @@ h1.page_h{
 
 .center{
     text-align: center;
+    margin-bottom: 20px;
 }
 
 
@@ -61,10 +62,20 @@ h1.page_h{
     margin-bottom:40px;
 }
 
-h3.Reponame{
+.Reponame{
     margin-left:auto;
     margin-right:auto;
+    margin-top:0;
+    padding: 0;
+    font-size: 20px;
 }
 .active {
   background-color: #ccffff;
+}
+a .hover :hover{
+    text-decoration: none;
+}
+a.blockBtn{
+    display: inline-block;
+    margin-left: 5px;
 }

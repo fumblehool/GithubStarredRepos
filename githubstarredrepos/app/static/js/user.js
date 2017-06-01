@@ -4,8 +4,6 @@ var { Router,
       IndexLink,
       Link,
       hashHistory } = ReactRouter;
-var Select = 'react-select';
-var Creatable = 'react-select';
 
 var NavigationBar = React.createClass({
     render: function(){
@@ -32,8 +30,11 @@ var SearchBar = React.createClass({
         this.props.doSearch(query);
     },
     render: function(){
+        var style={
+            marginBotton: '50px'
+        };
         return(
-            <div className="center container"> 
+            <div className="center container" style={style}> 
             <input type="text" ref="searchInput" placeholder="Search Name" value={this.props.query} onChange={this.doSearch}/>
             </div>
         )
@@ -164,43 +165,51 @@ var Repo = React.createClass({
         var name = this.props.data.name;
         var address = "http://github.com/" + owner + "/" + name;
         var downloadAddress="https://github.com/" + owner + "/" + name + "/archive/master.zip";
-        
+        var style = {
+            marginTop:'0px'
+        };
         return(
             <div className="container first_link">
                 <div className="row">
-                    <div className="col-md-8 col-xs-8 col-sm-8">
+                    <div className="col-md-10 col-xs-10 col-sm-10">
+                    <div className="fluid">
                     <a href= {address}>
-                        <h3 className="reponame">
+                        <h3 style={style}>
                         {this.props.data.owner.login} / {this.props.data.name}
                         </h3>
                     </a>
+                    <p>{this.props.data.description}</p>
                     </div>
-                    <div className="col-md-4 col-xs-4 col-sm-4 ">
+                    </div>
+                    <div className="col-md-2 col-xs-2 col-sm-2 ">
                         <div className="unstar">
-                            <div className="row">
-                            <br/>
-                            <br/>
-                            </div>
                             <div className="row">
                             <div className="center">
                             <a className="btn btn-success"  role="button">
-                                <span className="" onClick={this.CommentBox} aria-hidden="true">Comment</span>
+                                <span className="glyphicon glyphicon-pencil" onClick={this.CommentBox} aria-hidden="true"></span>
                             </a>
-                            <a className="btn btn-success" href={downloadAddress} role="button">
+                            <a className="btn btn-success blockBtn" href={downloadAddress} role="button">
                                 <span className="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                             </a>
+                            
                             </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                    <hr/>
+                    <div >
+                        <strong>Comment: </strong>
+                        {this.props.data.comment}
+                    </div>
+                    <div className="col-md-4 col-sm-4 col-xs-4 unstar">
+                            
+                    </div>
+                
                 <div class="py-1">
                     <p class="d-inline-block col-md-9  text-gray pr-4">
-                        {this.props.data.description}
-                        <hr/>
-                        {this.props.data.comment}
-
-
+                        
+                        
                     </p>
                 </div>
                 <div className="py-1">
@@ -215,31 +224,36 @@ var Repo = React.createClass({
 var TokenField = React.createClass({
     getInitialState: function(){
         return {
-            tagData: []
+            tags: []
         };
     },
     componentDidMount: function(){
-        $('#tokenfield').tokenfield({});
+        // $('#tokenfield').tokenfield({});
+        $(ReactDOM.findDOMNode(this)).tokenfield({});
+        
     },
     handleKeyPress: function(e){
+        alert();
+
         if(e.key === 'Enter'){
             var tag= tag + this.refs.tagInput.value; // this is the search text
             this.props.tagData 
             // this.setState({tagData: tagData + tag}).bind(this);
             // this.props.tagData = this.props.tagData + tag;
             alert(" Tags are:" + tag);
-            $('#tokenfield').tokenfield({});
+            
             
         }
     },
     render: function(){
         // $('#tokenfield').tokenfield({};)
+        
         return(
             <div id="token">
-                <p>{this.props.tagData}</p>
-                <input type="text" id="tokenfield" ref="tagInput"/>
-                <Creatable/>
-                <Select/>
+
+                <p>Helloooo{this.props.tagData}</p>
+                {this.state.tags}
+                <input type="text" onChange={this.handleKeyPress} id="tokenfield" ref="tagInput"/>
             </div>
         )
     }
